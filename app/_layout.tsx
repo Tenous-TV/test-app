@@ -1,5 +1,16 @@
 import { Stack } from "expo-router";
+import { StatusBar } from "expo-status-bar";
+import React from "react";
 
-export default function RootLayout() {
-  return <Stack />;
+export default function Layout() {
+  return (
+    <>
+      <Stack
+        screenOptions={{
+          headerShown: false,
+        }}
+      />
+      <StatusBar style="light" />
+    </>
+  );
 }
