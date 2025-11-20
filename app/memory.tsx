@@ -36,10 +36,12 @@ export default function MemoryScreen() {
   ]);
 
   const [cards] = useState<{ [key: number]: string }>({});
-  const [activePlayer, setActivePlayer] = useState<number | null>(null);
+  const [activePlayer, setActivePlayer] = useState<number>(1);
+  const [points, setPoints] = useState<{ [key: number]: number}>({});
   const [remainingClicks, setRemainingClicks] = useState<number>(2);
   const [activeIndex1, setActiveIndex1] = useState<number | null>(null);
   const [activeIndex2, setActiveIndex2] = useState<number | null>(null);
+  const [revealedCards] = useState<number[]>(new Array());
 
   const onCardPress = (key: number) => {
     console.log("Du hast Karte " + cards[key] + " gedrückt!" + remainingClicks);
@@ -55,10 +57,24 @@ export default function MemoryScreen() {
     setRemainingClicks(remainingClicks => remainingClicks - 1);
   };
   
+  /**
+   * @param key2 Wird mitgegeben, da setActiveIndex2(key) erst beim nächsten Render gesetzt wird.
+   */
   const checkSameFruits = (key2: number) => {
     if (cards[activeIndex1!] == cards[key2]) {
       console.log("Gleiche Früchte!!");
+      revealedCards?.push(activeIndex1!);
+      revealedCards?.push(key2);
+      addPointsToCurrentPlayer();
+      setRemainingClicks(3);
     }
+    revealedCards!.forEach(element => {
+        console.log(element);
+    });
+  }
+
+  const addPointsToCurrentPlayer = () => {
+    points[activePlayer] += 10;
   }
 
   const changePlayer = () => {
@@ -85,7 +101,13 @@ export default function MemoryScreen() {
     }
     setActivePlayer(1);
     setRemainingClicks(2);
-    console.log("useeffect aufgerufen")
+    setPoints(prev => {
+      const next = {...prev};
+      next[1] = 0;
+      next[2] = 0;
+      return next;
+    });
+    console.log("useeffect aufgerufen");
   }, []);
 
   return (
@@ -93,18 +115,24 @@ export default function MemoryScreen() {
         <Text style={styles.title}>Memory</Text>
 
         <View style={styles.players}>
+          <View style={styles.playerInfo}>
             <Text style={activePlayer == 1 ? styles.playerTextBold : styles.playerTextNormal}>Spieler 1</Text>
+            <Text style={styles.playerTextNormal}>{points[1]}</Text>
+          </View>
+          <View style={styles.playerInfo}>
             <Text style={activePlayer == 2 ? styles.playerTextBold : styles.playerTextNormal}>Spieler 2</Text>
+            <Text style={styles.playerTextNormal}>{points[2]}</Text>
+          </View>
         </View>
 
         <View style={styles.grid}>
             {[...Array(24)].map((_, i) => {
+              const cardIsRevealed = revealedCards?.find((element) => element == i) != null;
               return (
-                <TouchableOpacity key={i} style={styles.card} onPress={() => {onCardPress(i)}}>
-                  {(activeIndex1 === i || activeIndex2 === i) && (
+                <TouchableOpacity key={i} style={styles.card} onPress={() => {if (!cardIsRevealed) onCardPress(i);}}>
+                  {(activeIndex1 === i || activeIndex2 === i || cardIsRevealed) && (
                     <Image source={images.get(cards[i])} style={styles.image} />
                   )}
-                  
                 </TouchableOpacity>
               );
             })}
@@ -147,6 +175,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     width: 250,
     justifyContent: "space-between"
+  },
+  playerInfo: {
+
   },
   playerTextNormal: {
     color: "#fff",
