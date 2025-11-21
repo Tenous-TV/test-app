@@ -43,11 +43,11 @@ export default function MemoryScreen() {
   const [activeIndex1, setActiveIndex1] = useState<number | null>(null);
   const [activeIndex2, setActiveIndex2] = useState<number | null>(null);
   const [revealedCards] = useState<number[]>(new Array());
+  const [gameFinished, setGameFinished] = useState<boolean>(false)
 
   const onCardPress = (key: number) => {
     if (activeIndex1 == key|| activeIndex2 == key)
       return;
-    console.log("Du hast Karte " + cards[key] + " gedrückt!" + remainingClicks);
     switch(remainingClicks) {
       case 3: break;
       case 2: setActiveIndex1(key); break;
@@ -65,11 +65,14 @@ export default function MemoryScreen() {
    */
   const checkSameFruits = (key2: number) => {
     if (cards[activeIndex1!] == cards[key2]) {
-      console.log("Gleiche Früchte!!");
       revealedCards?.push(activeIndex1!);
       revealedCards?.push(key2);
       addPointsToCurrentPlayer();
       setRemainingClicks(3);
+
+      if (revealedCards.length >= 24) {
+        setGameFinished(true);
+      }
     }
   }
 
@@ -95,6 +98,23 @@ export default function MemoryScreen() {
     cards[key] = fruit;
   }
 
+  const getWinner = () => {
+    if (points[1] > points[2])
+      return 1;
+    else if (points[2] > points[1])
+      return 2;
+    else
+      return -2
+  }
+
+  const getWinnerPoints = () => {
+    let winner = getWinner();
+    if (winner == -2)
+      return 0;
+    else
+      return points[winner];
+  }
+
   useEffect(() => {
     for (let i = 0; i < 24; i++) {
       addToMap(i);
@@ -118,9 +138,9 @@ export default function MemoryScreen() {
   const Card: React.FC<CardProps> = ({id}) => {
     const cardIsRevealed = revealedCards?.find((element) => element == id) != null;
 
-    let content = cardIsRevealed 
-      ? <Image source={images.get(cards[id])} style={styles.image}/>
-      : <Image source={images.get(cards[id])} style={styles.imageAlpha}/>
+    let content;
+    if (activeIndex1 === id || activeIndex2 === id || cardIsRevealed)
+      content = <Image source={images.get(cards[id])} style={styles.image}/>
    
     return (
       <TouchableOpacity key={id} style={styles.card} onPress={() => {if (!cardIsRevealed) onCardPress(id);}}>
@@ -149,9 +169,11 @@ export default function MemoryScreen() {
                 <Card id={i}/>
               );
             })}
-            <WinScreen playerNumber={1} score={10}>
-              <Button title="Neustart" color="#0f47b6ff"/>
-            </WinScreen>
+            {gameFinished && 
+              <WinScreen playerNumber={getWinner()} score={getWinnerPoints()}>
+                <Button title="Neustart" color="#0f47b6ff" onPress={() => window.location.reload()}/>
+              </WinScreen>
+            }
         </View>
 
         <Button title="Beenden" color="#a00" onPress={() => router.back()} />
