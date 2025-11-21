@@ -1,6 +1,7 @@
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { Button, Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import WinScreen from "./winpopup";
 
 export default function MemoryScreen() {
   const router = useRouter();
@@ -44,6 +45,8 @@ export default function MemoryScreen() {
   const [revealedCards] = useState<number[]>(new Array());
 
   const onCardPress = (key: number) => {
+    if (activeIndex1 == key|| activeIndex2 == key)
+      return;
     console.log("Du hast Karte " + cards[key] + " gedrückt!" + remainingClicks);
     switch(remainingClicks) {
       case 3: break;
@@ -68,9 +71,6 @@ export default function MemoryScreen() {
       addPointsToCurrentPlayer();
       setRemainingClicks(3);
     }
-    revealedCards!.forEach(element => {
-        console.log(element);
-    });
   }
 
   const addPointsToCurrentPlayer = () => {
@@ -110,6 +110,24 @@ export default function MemoryScreen() {
     console.log("useeffect aufgerufen");
   }, []);
 
+
+  interface CardProps {
+    id: number;
+  }
+
+  const Card: React.FC<CardProps> = ({id}) => {
+    const cardIsRevealed = revealedCards?.find((element) => element == id) != null;
+
+    let content = cardIsRevealed 
+      ? <Image source={images.get(cards[id])} style={styles.image}/>
+      : <Image source={images.get(cards[id])} style={styles.imageAlpha}/>
+   
+    return (
+      <TouchableOpacity key={id} style={styles.card} onPress={() => {if (!cardIsRevealed) onCardPress(id);}}>
+        {content}
+      </TouchableOpacity>);
+  }
+
   return (
     <View style={styles.container}>
         <Text style={styles.title}>Memory</Text>
@@ -127,15 +145,13 @@ export default function MemoryScreen() {
 
         <View style={styles.grid}>
             {[...Array(24)].map((_, i) => {
-              const cardIsRevealed = revealedCards?.find((element) => element == i) != null;
               return (
-                <TouchableOpacity key={i} style={styles.card} onPress={() => {if (!cardIsRevealed) onCardPress(i);}}>
-                  {(activeIndex1 === i || activeIndex2 === i || cardIsRevealed) && (
-                    <Image source={images.get(cards[i])} style={styles.image} />
-                  )}
-                </TouchableOpacity>
+                <Card id={i}/>
               );
             })}
+            <WinScreen playerNumber={1} score={10}>
+              <Button title="Neustart" color="#0f47b6ff"/>
+            </WinScreen>
         </View>
 
         <Button title="Beenden" color="#a00" onPress={() => router.back()} />
@@ -186,10 +202,16 @@ const styles = StyleSheet.create({
   playerTextBold: {
     color: "#fff",
     fontWeight: "bold",
+    textDecorationLine: "underline",
     fontSize: 16
   },
   image: {
     width: 55,
     height: 55,
+  },
+  imageAlpha: {
+    width: 55,
+    height: 55,
+    opacity: 0.3
   }
 });
