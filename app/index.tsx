@@ -13,7 +13,7 @@ export default function HomeScreen() {
         </TouchableOpacity>
       </Link>
 
-      <Link href="/color-match" asChild>
+      <Link href="/colorMatch/colorMatch" asChild>
         <TouchableOpacity style={styles.button}>
           <Image source={require("../assets/icons/water-drop_icon.png")} style={styles.icon}/>
           <Text style={styles.buttonText}>Farben finden</Text>
