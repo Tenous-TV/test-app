@@ -61,8 +61,7 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     justifyContent: "center"
-    
-  },
+},
   buttonText: {
     color: "white",
     fontSize: 16,
