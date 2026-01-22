@@ -166,7 +166,7 @@ export default function MemoryScreen() {
         <View style={styles.grid}>
             {[...Array(24)].map((_, i) => {
               return (
-                <Card id={i}/>
+                <Card key={i} id={i}/>
               );
             })}
             {gameFinished && 
@@ -176,7 +176,7 @@ export default function MemoryScreen() {
             }
         </View>
 
-        <Button title="Beenden" color="#a00" onPress={() => router.back()} />
+        <Button title="Beenden" color="#a00" onPress={() => router.navigate("/")} />
     </View>
   );
 }
