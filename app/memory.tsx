@@ -1,7 +1,7 @@
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { Button, Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import WinScreen from "./winpopup";
+import WinPopup from "./winpopup";
 
 export default function MemoryScreen() {
   const router = useRouter();
@@ -170,9 +170,9 @@ export default function MemoryScreen() {
               );
             })}
             {gameFinished && 
-              <WinScreen playerNumber={getWinner()} score={getWinnerPoints()}>
+              <WinPopup playerNumber={getWinner().toString()} score={getWinnerPoints()}>
                 <Button title="Neustart" color="#0f47b6ff" onPress={() => window.location.reload()}/>
-              </WinScreen>
+              </WinPopup>
             }
         </View>
 
