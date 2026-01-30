@@ -4,32 +4,20 @@ import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 export default function HomeScreen() {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Smart Games</Text>
+      <Text style={styles.title}>Tic Tac Toe Menu</Text>
 
-      <Link href="/memory" asChild>
+      <Link href="/tic-tac-toe/tictactoeSingle" asChild>
         <TouchableOpacity style={styles.button}>
           <Image source={require("../assets/icons/compass_icon.png")} style={styles.icon}/>
-          <Text style={styles.buttonText}>Memory</Text>
+          <Text style={styles.buttonText}>Single Player</Text>
         </TouchableOpacity>
       </Link>
 
-      <Link href="/color-match" asChild>
-        <TouchableOpacity style={styles.button}>
-          <Image source={require("../assets/icons/water-drop_icon.png")} style={styles.icon}/>
-          <Text style={styles.buttonText}>Farben finden</Text>
-        </TouchableOpacity>
-      </Link>
 
-      <Link href="/reaction-test" asChild>
-        <TouchableOpacity style={styles.button}>
-          <Image source={require("../assets/icons/circle-x_icon.png")} style={styles.icon}/>
-          <Text style={styles.buttonText}>Reaktionstest</Text>
-        </TouchableOpacity>
-      </Link>
-      <Link href="/tic-tac-toe/tictactoeMenu" asChild>
+      <Link href="/tic-tac-toe/tictactoeMulti" asChild>
         <TouchableOpacity style={styles.button}>
           <Image source={require("../assets/icons/grid_icon.png")} style={styles.icon}/>
-          <Text style={styles.buttonText}>Tik Tak Toe</Text>
+          <Text style={styles.buttonText}>Multi Player</Text>
         </TouchableOpacity>
       </Link>
     </View>
@@ -56,11 +44,12 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginVertical: 10,
     borderWidth: 2,
-    borderColor: "#fff",
+    borderColor: "#ffffff",
     display: "flex",
     flexDirection: "row",
     justifyContent: "center"
-},
+    
+  },
   buttonText: {
     color: "white",
     fontSize: 16,
