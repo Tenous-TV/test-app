@@ -1,11 +1,14 @@
 import { useRouter } from "expo-router";
-import { useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import React, { useState } from "react";
+import { Button, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import WinPopup from "./winpopup";
 
 const TicTacToe = () => {  
   const router = useRouter();
   const [board, setBoard] = useState(Array(9).fill(null));
   const [xIsNext, setXIsNext] = useState(true);
+  const [gameFinished, setGameFinished] = useState<boolean>(false)
+  const [winner, setWinner] = useState<string>("-1")
 
   const handlePress = (index: number) => {
     if (board[index] || calculateWinner(board)) return;
@@ -16,21 +19,20 @@ const TicTacToe = () => {
     setXIsNext(!xIsNext);
 
     const winner = calculateWinner(newBoard);
-      if (winner) {
-        console.log(`winner: ${winner}`)
-        window.alert(`Spieler ${winner} hat gewonnen!`);
-      } else if (!newBoard.includes(null)) {
-        window.alert("Unentschieden niemand hat gewonnen.")
-      }
+
+    if (winner) {
+      console.log(`winner: ${winner}`)
+      setWinner(winner);
+      setGameFinished(true);
+    } else if (!newBoard.includes(null)) {
+      setGameFinished(true);
+    }
   };
 
   const resetGame = () => {
     setBoard(Array(9).fill(null));
     setXIsNext(true);
   };
-  const back = () => {
-    router.back();
-  }
 
   const renderSquare = (index: number) => (
     <TouchableOpacity style={styles.square} onPress={() => handlePress(index)}>
@@ -43,6 +45,11 @@ const TicTacToe = () => {
       <Text style={styles.title}>Tic Tac Toe</Text>
       <View style={styles.board}>
         {board.map((_, i) => renderSquare(i))}
+        {gameFinished && 
+        <WinPopup playerNumber={winner} score={-1}>
+          <Button title="Neustart" color="#0f47b6ff" onPress={() => window.location.reload()}/>
+        </WinPopup>
+      }
       </View>
       <Text style={styles.turnText}>
         Nächster Spieler: {xIsNext ? "X" : "O"}
@@ -50,10 +57,10 @@ const TicTacToe = () => {
       <TouchableOpacity style={styles.resetButton} onPress={resetGame}>
         <Text style={styles.buttonText}>Neustarten</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.backButton} onPress={back}>
+
+      <TouchableOpacity style={styles.backButton} onPress={() => router.navigate("/")}>
         <Text style={styles.buttonText}>Beenden</Text>
       </TouchableOpacity>
-
     </View>
   );
 };

@@ -26,7 +26,8 @@ export default function HomeScreen() {
           <Text style={styles.buttonText}>Reaktionstest</Text>
         </TouchableOpacity>
       </Link>
-      <Link href="/tic-tac-toe/tictactoeMenu" asChild>
+      
+      <Link href="/tic-tac-toe" asChild>
         <TouchableOpacity style={styles.button}>
           <Image source={require("../assets/icons/grid_icon.png")} style={styles.icon}/>
           <Text style={styles.buttonText}>Tik Tak Toe</Text>
