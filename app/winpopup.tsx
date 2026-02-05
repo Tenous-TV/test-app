@@ -8,11 +8,18 @@ interface WinPopupProps {
 }
 
 const WinPopup: React.FC<WinPopupProps> = ({playerNumber, score, children}) => {
-  let text = playerNumber != "-1"
+  let text;
+  if (playerNumber == "-2") {
+    text = <Text style={styles.text}>Du hast {score} Punkte erzielt!</Text>
+  }
+  else {
+    text = playerNumber != "-1"
     ? score != -1 
       ? <Text style={styles.text}>Spieler {playerNumber} hat gewonnen! <br/> Score: {score}</Text>
       : <Text style={styles.text}>Spieler {playerNumber} hat gewonnen!</Text>
     : <Text style={styles.text}>Unentschieden!</Text>
+  }
+  
 
   return (
     <View style={styles.container}>
