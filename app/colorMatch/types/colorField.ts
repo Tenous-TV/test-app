@@ -1,4 +1,3 @@
-import { ColorService } from "../services/ColorService";
 import { Colors } from "./colors";
 
 export class ColorField {
@@ -7,7 +6,7 @@ export class ColorField {
     constructor() {
     }
 
-    public onClick(): void {
-        ColorService.instance.handleClick(this.color);
+    public displayColor(): string {
+        return Colors[this.color];
     }
 }
