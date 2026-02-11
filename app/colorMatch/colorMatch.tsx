@@ -118,6 +118,7 @@ const styles = StyleSheet.create({
   itemContainer: {
     flex: 1,
     margin: 4,
+    width: "48%",
   },
   title: {
     color: "white",
