@@ -1,3 +1,4 @@
+import { useNavigation } from "expo-router";
 import { useEffect, useState } from "react";
 import { Button, StyleSheet, View } from "react-native";
 import Animated from "react-native-reanimated";
@@ -10,6 +11,23 @@ export default function ColorMatchScreen() {
   const [colorFields, setColorFields] = useState<ColorField[]>([]);
   const [globalColor, setGlobalColor] = useState<Colors>(0);
   const [rounds, setRounds] = useState(1);
+  const [isShowingCurrentColor, setIsShowingCurrentColor] = useState(false);
+
+  const navigation = useNavigation();
+
+  const trigger = () => {
+    setIsShowingCurrentColor(true);
+  };
+
+  useEffect(() => {
+    if (!isShowingCurrentColor) return;
+
+    const timer = setTimeout(() => {
+      setIsShowingCurrentColor(false);
+    }, 750);
+
+    return () => clearTimeout(timer);
+  }, [isShowingCurrentColor]);
 
   useEffect(() => {
     startGame();
@@ -35,6 +53,7 @@ export default function ColorMatchScreen() {
     const fieldCount = Math.min(currentRounds * 2, 8);
 
     fillGrid(fieldCount, newColor);
+    trigger();
   }
 
   function fillGrid(fieldCount: number, newColor: Colors): void {
@@ -68,22 +87,34 @@ export default function ColorMatchScreen() {
   }
 
   return (
-    <FlatList
-      style={styles.container}
-      data={colorFields}
-      keyExtractor={(_, index) => index.toString()}
-      numColumns={2}
-      columnWrapperStyle={styles.row}
-      contentContainerStyle={styles.content}
-      renderItem={({ item }) => (
-        <View style={styles.itemContainer}>
-          <Button
-            onPress={() => handleClick(item.color)}
-            title=""
-            color={item ? item.displayColor() : "transparent"}
-          />
-        </View>
-      )}
+    !isShowingCurrentColor ? 
+    <View style={styles.container}>
+      <FlatList
+        data={colorFields}
+        keyExtractor={(_, index) => index.toString()}
+        numColumns={2}
+        columnWrapperStyle={styles.row}
+        contentContainerStyle={styles.content}
+        renderItem={({ item }) => (
+          <View style={styles.itemContainer}>
+            <Button
+              onPress={() => handleClick(item.color)}
+              title=""
+              color={item ? item.displayColor() : "transparent"}
+            />
+          </View>
+        )}
+      />
+
+      <View style={styles.footer}>
+        <Button title="Zurück" onPress={() => navigation.goBack()} />
+      </View>
+    </View> :
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: Colors[globalColor],
+      }}
     />
   );
 }
@@ -107,13 +138,15 @@ function shuffleArray<T>(array: T[]): void {
 const styles = StyleSheet.create({
   content: {
     padding: 8,
+    justifyContent: "center",
   },
   container: {
-    padding: "10%",
+    flex: 1,
     backgroundColor: "#2e2e3a",
   },
   row: {
     justifyContent: "space-between",
+    alignItems: "center",
   },
   itemContainer: {
     flex: 1,
@@ -125,5 +158,8 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 20,
-  }
+  },
+  footer: {
+    padding: 15,
+  },
 });

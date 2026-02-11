@@ -5,6 +5,6 @@ export enum Colors {
   yellow,
   orange,
   purple,
-  pink,
-  brown
+  hotpink,
+  white
 }
