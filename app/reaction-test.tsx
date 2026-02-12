@@ -14,9 +14,7 @@ export default function ReactionTestScreen() {
   const [isFinished, setIsFinished] = useState(false);
   const [points, setPoints] = useState(0);
   const [timeLeft, setTimeLeft] = useState(ROUND_TIME);
-  const [circles, setCircles] = useState<
-    { id: number; x: number; y: number }[]
-  >([]);
+  const [circles, setCircles] = useState<{ id: number; x: number; y: number }[]>([]);
   const [spawnInterval, setSpawnInterval] = useState(START_INTERVAL);
 
   const spawnTimer = useRef<number | null>(null);
@@ -51,7 +49,6 @@ export default function ReactionTestScreen() {
     setSpawnInterval(i => Math.max(MIN_INTERVAL, i - 100));
   };
 
-  // Kreise spawnen
   useEffect(() => {
     if (!isStarted) return;
 
@@ -63,7 +60,6 @@ export default function ReactionTestScreen() {
     };
   }, [isStarted, spawnInterval]);
 
-  // Countdown
   useEffect(() => {
     if (!isStarted) return;
 
@@ -76,7 +72,6 @@ export default function ReactionTestScreen() {
     };
   }, [isStarted]);
 
-  // Spielende
   useEffect(() => {
     if (timeLeft > 0) return;
 
