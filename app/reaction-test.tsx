@@ -38,7 +38,8 @@ export default function ReactionTestScreen() {
 
     setCircles(prev => {
       const list = [...prev, circle];
-      if (list.length > 3) list.shift();
+      if (list.length > 3) 
+        list.shift();
       return list;
     });
   };
@@ -50,36 +51,43 @@ export default function ReactionTestScreen() {
   };
 
   useEffect(() => {
-    if (!isStarted) return;
+    if (!isStarted) 
+      return;
 
     spawnCircle();
     spawnTimer.current = setInterval(spawnCircle, spawnInterval);
 
     return () => {
-      if (spawnTimer.current) clearInterval(spawnTimer.current);
+      if (spawnTimer.current) 
+        clearInterval(spawnTimer.current);
     };
   }, [isStarted, spawnInterval]);
 
   useEffect(() => {
-    if (!isStarted) return;
+    if (!isStarted) 
+      return;
 
     timeTimer.current = setInterval(() => {
       setTimeLeft(t => t - 1);
     }, 1000);
 
     return () => {
-      if (timeTimer.current) clearInterval(timeTimer.current);
+      if (timeTimer.current) 
+        clearInterval(timeTimer.current);
     };
   }, [isStarted]);
 
   useEffect(() => {
-    if (timeLeft > 0) return;
+    if (timeLeft > 0) 
+      return;
 
     setIsFinished(true);
     setCircles([]);
 
-    if (spawnTimer.current) clearInterval(spawnTimer.current);
-    if (timeTimer.current) clearInterval(timeTimer.current);
+    if (spawnTimer.current) 
+      clearInterval(spawnTimer.current);
+    if (timeTimer.current) 
+      clearInterval(timeTimer.current);
   }, [timeLeft]);
 
   return (
@@ -122,7 +130,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   spawnfield: {
-    backgroundColor: "#111",
     height: 350,
     width: 250,
     marginVertical: 20,

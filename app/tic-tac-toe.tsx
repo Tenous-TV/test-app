@@ -58,9 +58,7 @@ const TicTacToe = () => {
         <Text style={styles.buttonText}>Neustarten</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.backButton} onPress={() => router.navigate("/")}>
-        <Text style={styles.buttonText}>Beenden</Text>
-      </TouchableOpacity>
+      <Button title="Beenden" color="#a00" onPress={() => router.navigate("/")} />
     </View>
   );
 };
@@ -89,7 +87,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#101820",
+    backgroundColor: "#2e2e3a",
   },
   title: {
     fontSize: 32,

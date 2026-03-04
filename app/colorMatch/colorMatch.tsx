@@ -1,6 +1,6 @@
-import { useNavigation } from "expo-router";
+import { useNavigation, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import { Button, StyleSheet, View } from "react-native";
+import { Button, StyleSheet, TouchableOpacity, View } from "react-native";
 import Animated from "react-native-reanimated";
 import { ColorField } from "./types/colorField";
 import { Colors } from "./types/colors";
@@ -8,6 +8,8 @@ import { Colors } from "./types/colors";
 const FlatList = Animated.FlatList;
 
 export default function ColorMatchScreen() {
+  const router = useRouter();
+  
   const [colorFields, setColorFields] = useState<ColorField[]>([]);
   const [globalColor, setGlobalColor] = useState<Colors>(0);
   const [rounds, setRounds] = useState(1);
@@ -95,20 +97,19 @@ export default function ColorMatchScreen() {
         numColumns={2}
         columnWrapperStyle={styles.row}
         contentContainerStyle={styles.content}
+        style={{ height: "100%"}}
         renderItem={({ item }) => (
           <View style={styles.itemContainer}>
-            <Button
+            <TouchableOpacity
               onPress={() => handleClick(item.color)}
-              title=""
-              color={item ? item.displayColor() : "transparent"}
-            />
+              style={[styles.colorBox, { backgroundColor: item ? item.displayColor() : "transparent" }]}>
+                &nbsp;
+              </TouchableOpacity>
           </View>
         )}
       />
 
-      <View style={styles.footer}>
-        <Button title="Zurück" onPress={() => navigation.goBack()} />
-      </View>
+      <Button title="Beenden" color="#a00" onPress={() => router.navigate("/")} />
     </View> :
     <View
       style={{
@@ -139,19 +140,22 @@ const styles = StyleSheet.create({
   content: {
     padding: 8,
     justifyContent: "center",
+    height: "100%"
   },
   container: {
-    flex: 1,
+    padding: 15,
     backgroundColor: "#2e2e3a",
+    height: "100%"
   },
   row: {
     justifyContent: "space-between",
     alignItems: "center",
+    height: "100%",
+    margin: 15
   },
   itemContainer: {
-    flex: 1,
-    margin: 4,
     width: "48%",
+    height: "100%"
   },
   title: {
     color: "white",
@@ -162,4 +166,15 @@ const styles = StyleSheet.create({
   footer: {
     padding: 15,
   },
+  colorBox: {
+    marginBottom: 15,
+    marginTop: 15,
+    width: "100%",
+    height: "100%",
+    borderRadius: 8,
+    elevation: 3, 
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+  }
 });

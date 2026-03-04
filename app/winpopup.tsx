@@ -1,7 +1,7 @@
 import { ReactElement } from "react";
 import { StyleSheet, Text, View } from "react-native";
 
-interface WinPopupProps {
+type WinPopupProps = {
     playerNumber: string;
     score: number;
     children: ReactElement
@@ -19,7 +19,6 @@ const WinPopup: React.FC<WinPopupProps> = ({playerNumber, score, children}) => {
       : <Text style={styles.text}>Spieler {playerNumber} hat gewonnen!</Text>
     : <Text style={styles.text}>Unentschieden!</Text>
   }
-  
 
   return (
     <View style={styles.container}>
